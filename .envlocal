@@ -1,2 +1,8 @@
 APP_DEBUG=True
 APP_DOMAIN=127.0.0.1
+DB_NAME=job_board_db
+DB_USER=django_user
+DB_PASSWORD=secretpassword
+DB_HOST=db
+DB_PORT=5432
+DB_SSLMODE=disable
