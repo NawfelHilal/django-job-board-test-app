@@ -1,0 +1,7 @@
+services:
+  web:
+    image: django-job-board-test-app:latest
+    env_file:
+      - .envlocal
+    ports:
+      - "8000:8000"
