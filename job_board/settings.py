@@ -164,7 +164,7 @@ if AZURE_ACCOUNT_NAME and AZURE_ACCOUNT_KEY:
             'BACKEND': 'backend.custom_azure.AzureMediaStorage',
         },
         'staticfiles': {
-            'BACKEND': 'backend.custom_azure.AzureStaticStorage',
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
         },
     }
 else:
