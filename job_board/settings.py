@@ -40,12 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'home',  # Ajouter l'app home pour que Django trouve les templates
     'jobs',  # Ajouter l'app home pour que Django trouve les templates
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -142,14 +144,32 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
 # Media files (User uploads - images, CVs, etc.)
-MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Azure Blob Storage configuration (conditionally enabled)
+AZURE_ACCOUNT_NAME = os.getenv('STORAGE_ACCOUNT_NAME')
+AZURE_ACCOUNT_KEY = os.getenv('STORAGE_ACCOUNT_KEY')
+
+if AZURE_ACCOUNT_NAME and AZURE_ACCOUNT_KEY:
+    STATIC_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/static/'
+    MEDIA_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/media/'
+    STORAGES = {
+        'default': {
+            'BACKEND': 'backend.custom_azure.AzureMediaStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'backend.custom_azure.AzureStaticStorage',
+        },
+    }
+else:
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
